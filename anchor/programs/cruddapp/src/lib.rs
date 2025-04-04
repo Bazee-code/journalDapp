@@ -8,8 +8,13 @@ declare_id!("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF");
 pub mod cruddapp {
     use super::*;
 
-    pub fn create_journal_entry(ctx : Context<CreateEntry>, title : String) -> Result<()>{
-
+    pub fn create_journal_entry(ctx : Context<CreateEntry>, title : String, message : String) -> Result<()>{
+      let journal_entry = &mut ctx.accounts.journal_entry;
+      journal_entry.owner = *Ctx.acoounts.owner.key;
+      journal_entry.title = title;
+      journal_entry.message = message;
+      
+      OK(())
     }
 
 }
