@@ -16,6 +16,11 @@ interface createEntryArgs {
   owner: PublicKey;
 }
 
+interface updateEntryArgs {
+  title: string;
+  message: string;
+}
+
 export function useCruddappProgram() {
   const { connection } = useConnection();
   const { cluster } = useCluster();
@@ -73,9 +78,22 @@ export function useCruddappProgramAccount({ account }: { account: PublicKey }) {
     queryFn: () => program.account.cruddapp.fetch(account),
   });
 
-  const createEntry = useMutation<string, Error, createEntryArgs>({});
+  const updateEntry = useMutation<string, Error, updateEntryArgs>({
+    mutationKey: ['journalEntry', 'update', { cluster }],
+    mutationFn: async ({ title, message }) => {
+      return program.methods.updateJournalEntry(title, message).rpc();
+    },
+    onSuccess: (signature) => {
+      transactionToast(signature);
+      accounts.refetch();
+    },
+    onError: (error) => {
+      toast.error(`Error updating entry: ${error.message}`);
+    },
+  });
 
   return {
     accountQuery,
+    updateEntry,
   };
 }
