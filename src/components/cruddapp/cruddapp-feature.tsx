@@ -1,15 +1,16 @@
-'use client'
+'use client';
 
-import { useWallet } from '@solana/wallet-adapter-react'
-import { WalletButton } from '../solana/solana-provider'
-import { AppHero, ellipsify } from '../ui/ui-layout'
-import { ExplorerLink } from '../cluster/cluster-ui'
-import { useCruddappProgram } from './cruddapp-data-access'
-import { CruddappCreate, CruddappList } from './cruddapp-ui'
+import { useWallet } from '@solana/wallet-adapter-react';
+import { WalletButton } from '../solana/solana-provider';
+import { AppHero, ellipsify } from '../ui/ui-layout';
+import { ExplorerLink } from '../cluster/cluster-ui';
+import { useCruddappProgram } from './cruddapp-data-access';
+import { CruddappCreate, CruddappList } from './cruddapp-ui';
 
-export default function CruddappFeature() {
-  const { publicKey } = useWallet()
-  const { programId } = useCruddappProgram()
+const { programId } = useCruddappProgram();
+
+const CruddappFeature = () => {
+  const { publicKey } = useWallet();
 
   return publicKey ? (
     <div>
@@ -20,7 +21,10 @@ export default function CruddappFeature() {
         }
       >
         <p className="mb-6">
-          <ExplorerLink path={`account/${programId}`} label={ellipsify(programId.toString())} />
+          <ExplorerLink
+            path={`account/${programId}`}
+            label={ellipsify(programId.toString())}
+          />
         </p>
         <CruddappCreate />
       </AppHero>
@@ -34,5 +38,7 @@ export default function CruddappFeature() {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
+
+export { CruddappFeature, programId };

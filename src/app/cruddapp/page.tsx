@@ -1,5 +1,5 @@
-import CruddappFeature from '@/components/cruddapp/cruddapp-feature'
+import { CruddappFeature } from '@/components/cruddapp/cruddapp-feature';
 
 export default function Page() {
-  return <CruddappFeature />
+  return <CruddappFeature />;
 }

@@ -1,9 +1,7 @@
 'use client';
 
-import { Keypair, PublicKey } from '@solana/web3.js';
-import { useMemo, useState } from 'react';
-import { ellipsify } from '../ui/ui-layout';
-import { ExplorerLink } from '../cluster/cluster-ui';
+import { PublicKey } from '@solana/web3.js';
+import { useState } from 'react';
 import {
   useCruddappProgram,
   useCruddappProgramAccount,
@@ -19,9 +17,7 @@ export function CruddappCreate() {
 
   const isFormValid = title.trim() !== '' && message.trim() !== '';
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmit = () => {
     if (publicKey && isFormValid) {
       createEntry.mutateAsync({ title, message, owner: publicKey });
     }
@@ -99,20 +95,25 @@ export function CruddappList() {
 }
 
 function CruddappCard({ account }: { account: PublicKey }) {
-  const {
-    accountQuery,
-    incrementMutation,
-    setMutation,
-    decrementMutation,
-    closeMutation,
-  } = useCruddappProgramAccount({
+  const { accountQuery, updateEntry, deleteEntry } = useCruddappProgramAccount({
     account,
   });
+  const title = accountQuery.data?.title;
+  const [message, setMessage] = useState('');
 
-  const count = useMemo(
-    () => accountQuery.data?.count ?? 0,
-    [accountQuery.data?.count]
-  );
+  const { publicKey } = useWallet();
+
+  const isFormValid = message.trim() !== '';
+
+  const handleSubmit = () => {
+    if (publicKey && isFormValid && title) {
+      updateEntry.mutateAsync({ title, message });
+    }
+  };
+
+  if (!publicKey) {
+    return <p>Connect your wallet</p>;
+  }
 
   return accountQuery.isLoading ? (
     <span className="loading loading-spinner loading-lg"></span>
@@ -124,68 +125,37 @@ function CruddappCard({ account }: { account: PublicKey }) {
             className="card-title justify-center text-3xl cursor-pointer"
             onClick={() => accountQuery.refetch()}
           >
-            {count}
+            {accountQuery?.data?.title}
           </h2>
-          <div className="card-actions justify-around">
-            <button
-              className="btn btn-xs lg:btn-md btn-outline"
-              onClick={() => incrementMutation.mutateAsync()}
-              disabled={incrementMutation.isPending}
-            >
-              Increment
-            </button>
-            <button
-              className="btn btn-xs lg:btn-md btn-outline"
-              onClick={() => {
-                const value = window.prompt(
-                  'Set value to:',
-                  count.toString() ?? '0'
-                );
-                if (
-                  !value ||
-                  parseInt(value) === count ||
-                  isNaN(parseInt(value))
-                ) {
-                  return;
-                }
-                return setMutation.mutateAsync(parseInt(value));
-              }}
-              disabled={setMutation.isPending}
-            >
-              Set
-            </button>
-            <button
-              className="btn btn-xs lg:btn-md btn-outline"
-              onClick={() => decrementMutation.mutateAsync()}
-              disabled={decrementMutation.isPending}
-            >
-              Decrement
-            </button>
-          </div>
-          <div className="text-center space-y-4">
-            <p>
-              <ExplorerLink
-                path={`account/${account}`}
-                label={ellipsify(account.toString())}
-              />
-            </p>
-            <button
-              className="btn btn-xs btn-secondary btn-outline"
-              onClick={() => {
-                if (
-                  !window.confirm(
-                    'Are you sure you want to close this account?'
-                  )
-                ) {
-                  return;
-                }
-                return closeMutation.mutateAsync();
-              }}
-              disabled={closeMutation.isPending}
-            >
-              Close
-            </button>
-          </div>
+          <p>{account?.toString()}</p>
+          <p>{accountQuery?.data?.message}</p>
+        </div>
+        <div className="card-actions justify-around">
+          <textarea
+            placeholder="Enter message"
+            value={message}
+            onChange={(e) => setMessage(e?.target.value)}
+            className="textarea textarea-bordered w-full max-w-xs"
+          />
+          <button
+            onClick={handleSubmit}
+            className="btn btn-xs lg:btn-md btn-warning"
+            disabled={updateEntry?.isPending && !isFormValid}
+          >
+            Update entry
+          </button>
+          <button
+            onClick={() => {
+              let title = accountQuery?.data.title;
+              if (title) {
+                deleteEntry?.mutateAsync(title);
+              }
+            }}
+            className="btn btn-xs lg:btn-md btn-error"
+            disabled={deleteEntry?.isPending}
+          >
+            Delete
+          </button>
         </div>
       </div>
     </div>
