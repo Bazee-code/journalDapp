@@ -94,7 +94,7 @@ export function useCruddappProgramAccount({ account }: { account: PublicKey }) {
 
   const deleteEntry = useMutation<string, Error, updateEntryArgs>({
     mutationKey: ['journalEntry', 'delete', { cluster }],
-    mutationFn: async ({ title }) => {
+    mutationFn: ({ title }) => {
       return program.methods.deleteJournalEntry(title).rpc();
     },
     onSuccess: (signature) => {
