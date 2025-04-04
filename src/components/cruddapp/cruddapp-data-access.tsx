@@ -92,8 +92,23 @@ export function useCruddappProgramAccount({ account }: { account: PublicKey }) {
     },
   });
 
+  const deleteEntry = useMutation<string, Error, updateEntryArgs>({
+    mutationKey: ['journalEntry', 'delete', { cluster }],
+    mutationFn: async ({ title }) => {
+      return program.methods.deleteJournalEntry(title).rpc();
+    },
+    onSuccess: (signature) => {
+      transactionToast(signature);
+      accounts.refetch();
+    },
+    onError: (error) => {
+      toast.error(`Error deleting entry: ${error.message}`);
+    },
+  });
+
   return {
     accountQuery,
     updateEntry,
+    deleteEntry,
   };
 }
