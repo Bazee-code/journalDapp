@@ -14,6 +14,7 @@ export function CruddappCreate() {
 
   const { createEntry } = useCruddappProgram();
   const { publicKey } = useWallet();
+  console.log('publicKeyyy', publicKey);
 
   const isFormValid = title.trim() !== '' && message.trim() !== '';
 

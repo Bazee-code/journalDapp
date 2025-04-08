@@ -2,7 +2,7 @@
 
 use anchor_lang::prelude::*;
 
-declare_id!("coUnmi3oBUtwtd9fjeAvSsJssXh5A5xyPbhpewyzRVF");
+declare_id!("2PJgrGixwx4zWr2HbnukN6aT4XoXeXG3S2n4Ef1gNgka");
 
 #[program]
 pub mod cruddapp {
@@ -46,7 +46,7 @@ pub struct CreateEntry<'info> {
   pub owner: Signer<'info>,
 
   pub system_program: Program<'info, System>
-};
+}
 
 #[derive(Accounts)]
 #[instruction(title: String)]

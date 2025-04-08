@@ -1,7 +1,7 @@
 'use client';
 
 import { getCruddappProgram, getCruddappProgramId } from '@project/anchor';
-import { useConnection } from '@solana/wallet-adapter-react';
+import { useConnection, useWallet } from '@solana/wallet-adapter-react';
 import { Cluster, Keypair, PublicKey } from '@solana/web3.js';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
@@ -21,9 +21,12 @@ interface updateEntryArgs {
   message: string;
 }
 
-export function useCruddappProgram() {
+export const useCruddappProgram = () => {
   const { connection } = useConnection();
+  console.log('connectionssss', connection);
   const { cluster } = useCluster();
+  const { wallets, select } = useWallet();
+  console.log('show wallets', wallets);
   const transactionToast = useTransactionToast();
   const provider = useAnchorProvider();
   const programId = useMemo(
@@ -34,6 +37,8 @@ export function useCruddappProgram() {
     () => getCruddappProgram(provider, programId),
     [provider, programId]
   );
+
+  console.log('programmm', program);
 
   const accounts = useQuery({
     queryKey: ['cruddapp', 'all', { cluster }],
@@ -66,7 +71,19 @@ export function useCruddappProgram() {
     getProgramAccount,
     createEntry,
   };
-}
+};
+
+// export const useCruddappProgram = () => {
+//   return console.log('CruddappProgram');
+// };
+
+// export const useCruddappProgramAccount = ({
+//   account,
+// }: {
+//   account: PublicKey;
+// }) => {
+//   return console.log('useCruddappProgramAccount');
+// };
 
 export function useCruddappProgramAccount({ account }: { account: PublicKey }) {
   const { cluster } = useCluster();
