@@ -33,8 +33,6 @@ export function AccountBalance({ address }: { address: PublicKey }) {
 export function AccountChecker() {
   const { publicKey } = useWallet();
 
-  console.log('publicKey', publicKey);
-
   if (!publicKey) {
     return null;
   }

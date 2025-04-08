@@ -7,7 +7,8 @@ import { ExplorerLink } from '../cluster/cluster-ui';
 import { useCruddappProgram } from './cruddapp-data-access';
 import { CruddappCreate, CruddappList } from './cruddapp-ui';
 
-const { programId } = useCruddappProgram();
+// const { programId } = useCruddappProgram();
+let programId = '2PJgrGixwx4zWr2HbnukN6aT4XoXeXG3S2n4Ef1gNgka';
 
 const CruddappFeature = () => {
   const { publicKey } = useWallet();

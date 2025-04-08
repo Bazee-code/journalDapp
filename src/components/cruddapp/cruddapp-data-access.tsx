@@ -23,10 +23,10 @@ interface updateEntryArgs {
 
 export const useCruddappProgram = () => {
   const { connection } = useConnection();
-  console.log('connectionssss', connection);
+
   const { cluster } = useCluster();
   const { wallets, select } = useWallet();
-  console.log('show wallets', wallets);
+
   const transactionToast = useTransactionToast();
   const provider = useAnchorProvider();
   const programId = useMemo(
@@ -37,8 +37,6 @@ export const useCruddappProgram = () => {
     () => getCruddappProgram(provider, programId),
     [provider, programId]
   );
-
-  console.log('programmm', program);
 
   const accounts = useQuery({
     queryKey: ['cruddapp', 'all', { cluster }],
@@ -72,18 +70,6 @@ export const useCruddappProgram = () => {
     createEntry,
   };
 };
-
-// export const useCruddappProgram = () => {
-//   return console.log('CruddappProgram');
-// };
-
-// export const useCruddappProgramAccount = ({
-//   account,
-// }: {
-//   account: PublicKey;
-// }) => {
-//   return console.log('useCruddappProgramAccount');
-// };
 
 export function useCruddappProgramAccount({ account }: { account: PublicKey }) {
   const { cluster } = useCluster();
